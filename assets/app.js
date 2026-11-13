@@ -357,7 +357,7 @@ function buildGauge() {
   }
   const label = el('text', { x: cx, y: 96, 'text-anchor': 'middle', class: 'label' }, gauge);
   label.textContent = 'PANIC';
-  valueText = el('text', { x: cx, y: 141, 'text-anchor': 'middle', class: 'value' }, gauge);
+  valueText = el('text', { x: cx, y: 138, 'text-anchor': 'middle', class: 'value' }, gauge);
 
   // the needle and hub pass over the face, as on a real dial
   needle = el('g', { filter: 'url(#needle-glow)' }, gauge);

@@ -9,11 +9,11 @@
 
 :root {
   --void: #070808;
-  --body-1: #12161a;
-  --body-2: #0c0f12;
-  --plate-1: #12161a;
-  --plate-2: #0e1115;
-  --well: #0b0e12;
+  --body-1: #101418;
+  --body-2: #0b0e11;
+  --plate-1: #0b0f13;
+  --plate-2: #0a0e12;
+  --well: #0d1115;
   --well-line: #343b42;
   --plate-line: #262c32;
   --key-1: #1d2227;
@@ -36,7 +36,7 @@
   --cond: "Barlow Cond", "Barlow SC", "Arial Narrow", sans-serif;
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --screw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.38' cy='.32' r='.75'%3E%3Cstop offset='0' stop-color='%23676b71'/%3E%3Cstop offset='.55' stop-color='%23363a3f'/%3E%3Cstop offset='1' stop-color='%23191b1e'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='10' cy='10' r='8.6' fill='%230b0c0d'/%3E%3Ccircle cx='10' cy='10' r='7.6' fill='url(%23g)'/%3E%3Cpath d='M6.3 7.6l6.1 4.8M7.6 13.7l4.8-6.1' stroke='%23101113' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .025 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
   color-scheme: dark;
 }
 
@@ -199,7 +199,7 @@ html { scrollbar-color: #3a3d42 var(--void); scrollbar-width: thin; }
 #setup { flex: 1; display: flex; flex-direction: column; gap: 16px; }
 
 .well {
-  background: linear-gradient(180deg, #0a0d10, var(--well) 40%, #0d1115);
+  background: var(--well);
   border: 1px solid var(--well-line);
   border-radius: 12px;
   box-shadow: inset 0 2px 5px rgba(0,0,0,.45), 0 1px 0 rgba(255,255,255,.05);
@@ -373,7 +373,7 @@ input.v::placeholder { color: #80868d; font-weight: 500; }
   position: sticky; bottom: 0;
   z-index: 3;
   border-radius: 0 0 13px 13px;
-  background: var(--noise), linear-gradient(180deg, rgba(14, 17, 21, 0), var(--plate-2) 8px);
+  background: linear-gradient(180deg, rgba(13, 17, 21, 0), #0d1115 8px);
 }
 .panel::after {
   content: "";
@@ -423,7 +423,7 @@ input.v::placeholder { color: #80868d; font-weight: 500; }
 /* ── 2 · the truth ───────────────────────────────────────────── */
 .gauge-plate { display: grid; place-items: center; margin: -8px 0 0; }
 .gauge { width: 100%; max-width: 298px; height: auto; overflow: visible; }
-.gauge .value { font: 600 50px/1 var(--sans); font-variant-numeric: tabular-nums; fill: var(--red); }
+.gauge .value { font: 600 42px/1 var(--sans); font-variant-numeric: tabular-nums; fill: var(--red); }
 .gauge .value.calm { fill: #5bd06a; }
 .gauge .value.warm { fill: var(--amber-hi); }
 .gauge .label { font: 600 25px/1 var(--sans); fill: #d5d9dd; letter-spacing: .04em; }
