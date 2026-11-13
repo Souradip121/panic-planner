@@ -150,8 +150,8 @@ function buildAttitude() {
   const wrap = el('g', { class: 'plane-wrap' }, attitude);
   planeEl = el('g', { class: 'plane' }, wrap);
   el('path', {
-    d: 'M60 31c2 0 3 2 3 5v13l21 10.5v5l-21-6v12.5l7 5v4l-10-3-10 3v-4l7-5V58.5l-21 6v-5L57 49V36c0-3 1-5 3-5z',
-    fill: '#f2f4f6', stroke: '#9aa0a6', 'stroke-width': 0.6,
+    d: 'M60 28.5c1.5 0 2.4 2.3 2.4 5.6V50.5L87.5 64.6v3.4L62.4 61.2v16.9l8.9 6.5v3.1L61.3 85.4 60 90l-1.3-4.6-10 2.3v-3.1l8.9-6.5V61.2L32.5 68v-3.4L57.6 50.5V34.1c0-3.3.9-5.6 2.4-5.6z',
+    fill: '#c8ccd0', stroke: '#7d848b', 'stroke-width': 0.5, 'stroke-linejoin': 'round',
   }, planeEl);
 }
 
@@ -341,7 +341,7 @@ function buildGauge() {
   const ticks = el('g', { stroke: '#eef0f2', 'stroke-linecap': 'butt' }, gauge);
   for (let v = 0; v <= 100; v += 2.5) {
     const major = v % 25 === 0, mid = v % 5 === 0;
-    const [x0, y0] = polar(cx, cy, major ? 124 : mid ? 141 : 144, angleOf(v));
+    const [x0, y0] = polar(cx, cy, major ? 127 : mid ? 141 : 144, angleOf(v));
     const [x1, y1] = polar(cx, cy, 151, angleOf(v));
     el('line', { x1: x0, y1: y0, x2: x1, y2: y1, 'stroke-width': major ? 3.4 : mid ? 1.6 : 1, opacity: major ? 1 : mid ? 0.85 : 0.5 }, ticks);
   }
@@ -349,20 +349,21 @@ function buildGauge() {
   note(256, '0% = 6 h or more a unit');
   note(274, '100% = 30 min or less');
 
+  // the printed face: numerals, PANIC and the reading
+  for (const v of [0, 25, 50, 75, 100]) {
+    const [x, y] = polar(cx, cy, 112, angleOf(v));
+    const t = el('text', { x, y: y + 7, 'text-anchor': 'middle', class: 'num' }, gauge);
+    t.textContent = v;
+  }
+  const label = el('text', { x: cx, y: 96, 'text-anchor': 'middle', class: 'label' }, gauge);
+  label.textContent = 'PANIC';
+  valueText = el('text', { x: cx, y: 141, 'text-anchor': 'middle', class: 'value' }, gauge);
+
+  // the needle and hub pass over the face, as on a real dial
   needle = el('g', { filter: 'url(#needle-glow)' }, gauge);
   el('path', { d: `M${cx - 3.2} ${cy + 22}L${cx - 4} ${cy}L${cx - 1} ${cy - 120}L${cx + 1} ${cy - 120}L${cx + 4} ${cy}L${cx + 3.2} ${cy + 22}z`, fill: 'url(#needle-fill)' }, needle);
   el('circle', { cx, cy, r: 15, fill: 'url(#hub)', stroke: '#0b0c0d', 'stroke-width': 1.5 }, gauge);
   el('circle', { cx, cy, r: 3, fill: '#0e0f10' }, gauge);
-  // numerals sit on top of the needle, like the printed face under a glass
-  for (const v of [0, 25, 50, 75, 100]) {
-    const [x, y] = polar(cx, cy, 111, angleOf(v));
-    const t = el('text', { x, y: y + 7, 'text-anchor': 'middle', class: 'num' }, gauge);
-    t.textContent = v;
-  }
-
-  const label = el('text', { x: cx, y: 104, 'text-anchor': 'middle', class: 'label' }, gauge);
-  label.textContent = 'PANIC';
-  valueText = el('text', { x: cx, y: 152, 'text-anchor': 'middle', class: 'value' }, gauge);
   setNeedle(0);
 }
 function setNeedle(v) {
@@ -508,14 +509,13 @@ function renderPlan() {
       <i class="node" aria-hidden="true"></i>
       <div class="well card"><div class="card-main"><time datetime="${new Date(p.examAt).toISOString()}">${clock(p.examAt)}</time>
       <span class="what">${esc(name ? `${name} exam` : 'The exam')}</span></div>${icon('flag')}</div></li>`);
-  if (state.skip) {
-    const u = { n: state.skip.n, name: state.units[state.skip.n - 1]?.name.trim() || '' };
-    items.push(`<li class="blk blk-skip">
-      <i class="node" aria-hidden="true"></i>
-      <div class="well card"><div class="card-main"><span class="what">Unit ${u.n} · SKIP${state.skip.why ? ` (${esc(state.skip.why)})` : ''}</span></div>
-      <button type="button" class="key key-cap" id="unskip" aria-label="Bring back unit ${u.n}">Undo</button></div></li>`);
-  }
   timeline.innerHTML = items.join('');
+  const skipped = $('#skipped');
+  skipped.hidden = !state.skip;
+  skipped.innerHTML = state.skip ? `<li class="blk blk-skip">
+      <i class="node" aria-hidden="true"></i>
+      <div class="well card"><div class="card-main"><span class="what">Unit ${state.skip.n} · SKIP${state.skip.why ? ` (${esc(state.skip.why)})` : ''}</span></div>
+      <button type="button" class="key key-cap" id="unskip" aria-label="Bring back unit ${state.skip.n}">Undo</button></div></li>` : '';
 
   const note = $('#plan-note');
   if (p.truth.kind === 'passed') {
@@ -543,13 +543,14 @@ timeline.addEventListener('click', (e) => {
   const sk = e.target.closest('[data-skip]');
   if (sk) { openSkip = openSkip === +sk.dataset.skip ? null : +sk.dataset.skip; renderPlan(); return; }
   if (e.target.closest('[data-cancel]')) { const n = openSkip; openSkip = null; renderPlan(); timeline.querySelector(`[data-skip="${n}"]`)?.focus(); return; }
-  if (e.target.closest('#unskip')) {
-    state.skip = null;
-    replan();
-    renderPlan();
-    renderInstruments();
-    $('#plan-h').focus();
-  }
+});
+$('#skipped').addEventListener('click', (e) => {
+  if (!e.target.closest('#unskip')) return;
+  state.skip = null;
+  replan();
+  renderPlan();
+  renderInstruments();
+  $('#plan-h').focus();
 });
 timeline.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -584,7 +585,7 @@ function livePlan(now = Date.now(), p = currentPlan()) {
   if (!on) { document.title = 'Panic Planner'; return; }
 
   if (!cur) {
-    $('#readout-now').textContent = 'Exam time';
+    $('#readout-now').textContent = 'Exam time.';
     $('#readout-time').textContent = '0:00';
     $('#readout-bar').style.width = '100%';
     $('#readout-next').textContent = 'Good luck. Go write it.';
@@ -593,7 +594,7 @@ function livePlan(now = Date.now(), p = currentPlan()) {
   }
   const b = cur.block;
   const what = b.kind === 'study' ? unitLabel(b.unit) : BLOCK[b.kind].what;
-  $('#readout-now').textContent = `Now · ${what}`;
+  $('#readout-now').textContent = `Now: ${what}`;
   const left = fmtCountdown(cur.remainingMs);
   $('#readout-time').textContent = left;
   $('#readout-bar').style.width = `${((cur.elapsedMs / (b.end - b.start)) * 100).toFixed(2)}%`;

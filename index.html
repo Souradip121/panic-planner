@@ -46,9 +46,9 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5.5L8.5 12l6.5 6.5"/></symbol>
     <symbol id="i-minus" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M6 12h12M12 6v12"/></symbol>
-    <symbol id="i-play" viewBox="0 0 24 24"><path class="fill" d="M7 4.5l12.5 7.5L7 19.5z"/></symbol>
-    <symbol id="i-stop" viewBox="0 0 24 24"><rect class="fill" x="6" y="6" width="12" height="12" rx="1.5"/></symbol>
-    <symbol id="i-warn" viewBox="0 0 24 24"><path class="fill" d="M12 2.25L23 21H1z"/><path class="cut" d="M12 9v5.5M12 17.25v.5"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M7 4.5l12.5 7.5L7 19.5z"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect fill="currentColor" stroke="none" x="6" y="6" width="12" height="12" rx="1.5"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" d="M12 2.6L22.6 20.6H1.4z"/><path fill="none" stroke="#f5a524" stroke-width="2.6" stroke-linecap="round" d="M12 9.2v5.3M12 17.4v.3"/></symbol>
   </defs>
 </svg>
 
@@ -172,12 +172,13 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         <button type="button" class="key key-cap key-replan" id="replan"><svg aria-hidden="true"><use href="#i-replan"/></svg><span id="replan-text">From now</span></button>
       </div>
       <div class="readout" id="readout" hidden aria-live="off">
-        <p class="readout-now" id="readout-now">Now</p>
         <p class="readout-time" id="readout-time" role="timer">0:00</p>
         <div class="readout-bar"><i id="readout-bar"></i></div>
+        <p class="readout-now" id="readout-now">Now</p>
         <p class="readout-next" id="readout-next"></p>
       </div>
       <ol class="timeline" id="timeline"></ol>
+      <ol class="skipped" id="skipped" hidden></ol>
       <p class="plan-note" id="plan-note" hidden></p>
       <div class="actions">
         <a class="key key-back" href="#/truth" aria-label="Back to the truth"><svg aria-hidden="true"><use href="#i-back"/></svg></a>
