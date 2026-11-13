@@ -1,0 +1,11 @@
+{
+  "name": "panic-planner",
+  "private": true,
+  "type": "module",
+  "description": "The night before the exam: hours left, hours per unit, the sleep you can still get, a panic %, and a timed plan. Static site, no backend.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "serve": "python -m http.server 8803 --bind 127.0.0.1"
+  },
+  "license": "MIT"
+}
